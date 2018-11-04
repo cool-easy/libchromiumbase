@@ -1,0 +1,42 @@
+ninja_required_version = 1.7.2
+
+rule gn
+  command = ../../buildtools/linux64/gn --root=../.. -q gen .
+  description = Regenerating ninja files
+
+#build build.ninja: gn
+#  generator = 1
+#  depfile = build.ninja.d
+
+pool build_toolchain_action_pool
+  depth = 4
+
+pool build_toolchain_link_pool
+  depth = 2
+
+subninja toolchain.ninja
+
+build base: phony obj/base/libbase.a
+build base$:base: phony obj/base/libbase.a
+build base_static: phony obj/base/libbase_static.a
+build base$:base_static: phony obj/base/libbase_static.a
+build base/third_party/dynamic_annotations: phony obj/base/third_party/dynamic_annotations/libdynamic_annotations.a
+build base/third_party/dynamic_annotations$:dynamic_annotations: phony obj/base/third_party/dynamic_annotations/libdynamic_annotations.a
+build modp_b64: phony obj/third_party/modp_b64/libmodp_b64.a
+build third_party/modp_b64$:modp_b64: phony obj/third_party/modp_b64/libmodp_b64.a
+build third_party/modp_b64: phony obj/third_party/modp_b64/libmodp_b64.a
+build base/third_party/symbolize: phony obj/base/third_party/symbolize/libsymbolize.a
+build base/third_party/symbolize$:symbolize: phony obj/base/third_party/symbolize/libsymbolize.a
+build base/third_party/xdg_mime$:xdg_mime: phony obj/base/third_party/xdg_mime/libxdg_mime.a
+build base/third_party/xdg_mime: phony obj/base/third_party/xdg_mime/libxdg_mime.a
+build xdg_user_dirs: phony obj/base/third_party/xdg_user_dirs/libxdg_user_dirs.a
+build base/third_party/xdg_user_dirs$:xdg_user_dirs: phony obj/base/third_party/xdg_user_dirs/libxdg_user_dirs.a
+build base/third_party/xdg_user_dirs: phony obj/base/third_party/xdg_user_dirs/libxdg_user_dirs.a
+build libevent: phony obj/base/third_party/libevent/libevent.a
+build base/third_party/libevent$:libevent: phony obj/base/third_party/libevent/libevent.a
+build base/third_party/libevent: phony obj/base/third_party/libevent/libevent.a
+
+build all: phony $
+    obj/base/libbase.a
+
+default all
